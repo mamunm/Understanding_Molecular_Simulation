@@ -7,12 +7,63 @@ from pathlib import Path
 import itertools
 import pandas as pd
 import sys
+import numba as nb
 
 from typing import NamedTuple
 
 np.random.seed(0)
 
 PI = 3.14159265
+
+@nb.njit(parallel=True)
+def respect_pbc_distance(dx, boxLength):
+        """
+        Correct the distance vector for periodic boundary conditions.
+        
+        Args:
+            dx (float or numpy.ndarray): Distance(s) to be corrected.
+        
+        Returns:
+            float or numpy.ndarray: Corrected distance(s).
+        """
+        hL = 0.5 * boxLength
+        return np.where(dx > hL, dx - boxLength, np.where(dx < -hL, dx + boxLength, dx))
+    
+@nb.njit(parallel=True)
+def determine_forces(positions, N, e_cut, e_cor, cutoff, boxLength):
+        """
+        Determine the forces on each particle using LJ potential.
+        
+        Returns:
+            forces (numpy.ndarray): Forces on each particle.
+            energy (float): Total energy.
+            vir (float): Virial.
+        """
+        forces = np.zeros((N, 3))
+        energy = 0
+        vir = 0
+        
+        e_cut = e_cut
+        e_cor = config.N * e_cor
+        cutoff_sq = cutoff**2
+        
+        for i in nb.prange(N):
+            for j in nb.prange(i+1, N):
+                r_ij = positions[i] - positions[j]
+                r_ij = respect_pbc_distance(r_ij, boxLength)
+                r_ij_sq = np.sum(r_ij**2)
+                
+                if r_ij_sq < cutoff_sq:
+                    r_ij_inv = 1 / r_ij_sq
+                    r_ij_inv6 = r_ij_inv ** 6
+                    ff = 48 * r_ij_inv * (r_ij_inv6 - 0.5 * r_ij_inv**3)
+                    vir += 48 * (r_ij_inv6 - 0.5 * r_ij_inv**3)
+                    forces[i] += ff * r_ij
+                    forces[j] -= ff * r_ij
+                    energy += 4 * (r_ij_inv6 - r_ij_inv**3) - e_cut
+        
+        # return forces, energy + e_cor, vir
+        return forces, energy + e_cor, vir
 
 class MDConfig(NamedTuple):
     """
@@ -79,12 +130,12 @@ class MDSimulation:
         return 4 * (1/self.config.cutoff**12 - 1/self.config.cutoff**6)
     
     def compute_e_cor(self):
-        """e correlation at cutoff"""
-        return 8*PI*self.config.d**2*((2/3) * (1/self.config.cutoff**9) - 1/self.config.cutoff**3)
+        """long range correction"""
+        return (8/3)*PI*self.config.d*(1/self.config.cutoff**9/3 - 1/self.config.cutoff**3)
     
-    # def compute_p_cor(self):
-    #     """p correlation at cutoff"""
-    #     return (16/3)*PI*self.config.d*(1/(3*self.config.cutoff**9) - 1/(9*self.config.cutoff**3))
+    def compute_p_cor(self):
+        """particle correlation"""
+        return (16/3)*PI*self.config.d**2*(2/3/self.config.cutoff**9 - 1/self.config.cutoff**3)
     
     def create_folder(self):
         """
@@ -103,31 +154,44 @@ class MDSimulation:
             energy (float): Total energy.
             vir (float): Virial.
         """
-        forces = np.zeros((self.config.N, 3))
-        energy = 0
-        vir = 0
+        forces, energy, vir = determine_forces(self.positions,
+            self.config.N, self.e_cut, self.e_cor, self.config.cutoff, 
+            self.boxLength)
+        return forces, energy, vir
+    # def determine_forces(self):
+    #     """
+    #     Determine the forces on each particle using LJ potential.
         
-        e_cut = self.e_cut
-        e_cor = self.config.N * self.e_cor
-        cutoff_sq = self.config.cutoff**2
+    #     Returns:
+    #         forces (numpy.ndarray): Forces on each particle.
+    #         energy (float): Total energy.
+    #         vir (float): Virial.
+    #     """
+    #     forces = np.zeros((self.config.N, 3))
+    #     energy = 0
+    #     vir = 0
         
-        for i in range(self.config.N):
-            for j in range(i+1, self.config.N):
-                r_ij = self.positions[i] - self.positions[j]
-                r_ij = self.respect_pbc_distance(r_ij)
-                r_ij_sq = np.sum(r_ij**2)
+    #     e_cut = self.e_cut
+    #     e_cor = self.config.N * self.e_cor
+    #     cutoff_sq = self.config.cutoff**2
+        
+    #     for i in range(self.config.N):
+    #         for j in range(i+1, self.config.N):
+    #             r_ij = self.positions[i] - self.positions[j]
+    #             r_ij = self.respect_pbc_distance(r_ij)
+    #             r_ij_sq = np.sum(r_ij**2)
                 
-                if r_ij_sq < cutoff_sq:
-                    r_ij_inv = 1 / r_ij_sq
-                    r_ij_inv6 = r_ij_inv ** 6
-                    ff = 48 * r_ij_inv * (r_ij_inv6 - 0.5 * r_ij_inv**3)
-                    vir += ff
-                    forces[i] += ff * r_ij
-                    forces[j] -= ff * r_ij
-                    energy += 4 * (r_ij_inv6 - r_ij_inv**3) - e_cut
+    #             if r_ij_sq < cutoff_sq:
+    #                 r_ij_inv = 1 / r_ij_sq
+    #                 r_ij_inv6 = r_ij_inv ** 6
+    #                 ff = 48 * r_ij_inv * (r_ij_inv6 - 0.5 * r_ij_inv**3)
+    #                 vir += 48 * (r_ij_inv6 - 0.5 * r_ij_inv**3)
+    #                 forces[i] += ff * r_ij
+    #                 forces[j] -= ff * r_ij
+    #                 energy += 4 * (r_ij_inv6 - r_ij_inv**3) - e_cut
         
-        # return forces, energy + e_cor, vir
-        return forces, energy + e_cor, vir
+    #     # return forces, energy + e_cor, vir
+    #     return forces, energy + e_cor, vir
 
     # def determine_forces(self):
     #     """
@@ -359,7 +423,7 @@ class MDSimulation:
         """
         forces, energy, virial = self.determine_forces()
         temp, e_total, e_kin = self.integrate_eom(forces, energy)
-        pressure = self.config.d * e_kin * 2. / 3. / self.config.N + virial / 3.0 / (self.config.N / self.config.d)
+        pressure = (self.config.d * e_kin * 2. / 3.) + (virial / 3.0 / (self.config.N / self.config.d))
         self.history.append([t, temp, e_kin, energy/self.config.N, e_total, pressure])
         logger.info(f"Time: {t:.3f}, Temperature: {temp:.2e}, KE: {e_kin:0.2e} PE: {energy/self.config.N:0.2e} Energy: {e_total:.2e} Pressure: {pressure:0.2f}")
         

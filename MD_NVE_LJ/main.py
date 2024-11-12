@@ -95,7 +95,7 @@ class MDSimulation:
     
     def determine_forces(self):
         """Determine the forces on each particle using LJ potential."""
-        forces = np.zeros((self.config.N, 3))
+        forces = np.zeros((self.config.N, 3), dtype=np.float64)
         energy = 0
         vir = 0
         cutoff_sq = self.config.cutoff ** 2
@@ -171,13 +171,16 @@ class MDSimulation:
         frac = [i + 0.5 for i in range(n3)]
         positions = np.array(list(itertools.product(frac, repeat=3))) * self.get_boxLength()/n3
         positions = positions % self.boxLength
+        positions = np.array(positions, dtype=np.float64)
         return positions[:self.config.N]
     
     def initialize_velocities(self):
         """
         Initialize the particle velocities with a uniform distribution U[-.5, 0.5].
         """
-        velocities = np.random.uniform(low=-0.5, high=0.5, size=(self.config.N, 3))
+        velocities = np.random.uniform(low=-0.5, high=0.5,
+            size=(self.config.N, 3))
+        velocities = np.array(velocities, dtype=np.float64)
         return velocities
     
     def integrate_eom(self, forces, energy):
@@ -303,19 +306,19 @@ if __name__ == "__main__":
     #                     dt=0.005)
     #     simulation = MDSimulation(config)
     #     simulation.run_simulation()
-    # config = MDConfig(N=500,
-    #                 T=0.851,
-    #                 d=0.776,
-    #                 cutoff=3,
-    #                 tmax=5,
-    #                 dt=0.005)
-    # simulation = MDSimulation(config)
-    # simulation.run_simulation()
-    config = MDConfig(N=108,
-                    T=0.728,
-                    d=0.8442,
-                    cutoff=2.5,
-                    tmax=40,
-                    dt=0.001)
+    config = MDConfig(N=500,
+                    T=0.851,
+                    d=0.776,
+                    cutoff=3,
+                    tmax=5,
+                    dt=0.005)
     simulation = MDSimulation(config)
     simulation.run_simulation()
+    # config = MDConfig(N=108,
+    #                 T=0.728,
+    #                 d=0.8442,
+    #                 cutoff=2.5,
+    #                 tmax=40,
+    #                 dt=0.001)
+    # simulation = MDSimulation(config)
+    # simulation.run_simulation()
