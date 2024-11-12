@@ -63,7 +63,7 @@ class MDSimulation:
         self.config = config
         self.e_cut = self.compute_e_cut()
         self.e_cor = self.compute_e_cor()
-        # self.p_cor = self.compute_p_cor()
+        self.p_cor = self.compute_p_cor()
         self.nve_id = self.get_exp_id()
         self.path = self.create_folder()
         self.boxLength = self.get_boxLength()
@@ -77,13 +77,13 @@ class MDSimulation:
         """Lennard-Jones potential at cutoff"""
         return 4 * ((1/self.config.cutoff**12) - (1/self.config.cutoff**6))
     
-    def compute_e_cor_old(self):
-        """long range correction"""
-        return (8/3)*PI*self.config.d**3*(1/self.config.cutoff**9/3 - 1/self.config.cutoff**3)
-    
     def compute_e_cor(self):
         """long range correction"""
-        return 8*PI*self.config.d**3*(1/self.config.cutoff**9/9 - 1/self.config.cutoff**3/3)
+        return (8/3)*PI*self.config.d*(1/self.config.cutoff**9/3 - 1/self.config.cutoff**3)
+    
+    def compute_p_cor(self):
+        """particle correlation"""
+        return (16/3)*PI*self.config.d**2*(2/3/self.config.cutoff**9 - 1/self.config.cutoff**3)
     
     def create_folder(self):
         """
@@ -115,6 +115,7 @@ class MDSimulation:
         r_ij_inv_12 = r_ij_inv_6 ** 2
 
         ff = 48 * r_ij_inv_sq * (r_ij_inv_12 - 0.5 * r_ij_inv_6)
+        ff_vir = 48 * (r_ij_inv_12 - 0.5 * r_ij_inv_6)
         forces_contrib = ff[:, np.newaxis] * pos_diff
         energy_contrib = 4 * (r_ij_inv_12 - r_ij_inv_6) - e_cut
 
@@ -123,10 +124,9 @@ class MDSimulation:
         np.add.at(forces, indices[:, 1], -forces_contrib)
 
         energy = np.sum(energy_contrib)
-        vir = np.sum(ff)
+        vir = np.sum(ff_vir)
         
-        # return forces/2, energy/2 + e_cor, vir
-        return forces/2, energy/2, vir
+        return forces/2, energy/2 + e_cor, vir/2
 
     def get_boxLength(self):
         """
@@ -170,6 +170,7 @@ class MDSimulation:
         
         frac = [i + 0.5 for i in range(n3)]
         positions = np.array(list(itertools.product(frac, repeat=3))) * self.get_boxLength()/n3
+        positions = positions % self.boxLength
         return positions[:self.config.N]
     
     def initialize_velocities(self):
@@ -263,9 +264,9 @@ class MDSimulation:
         """
         forces, energy, virial = self.determine_forces()
         temp, e_total, e_kin = self.integrate_eom(forces, energy)
-        pressure = self.config.d * e_kin * 2. / 3. / self.config.N + virial / 3.0 / (self.config.N / self.config.d)
+        pressure = (self.config.d * e_kin * 2. / 3.) + (virial / 3.0 / (self.config.N / self.config.d))
         self.history.append([t, temp, e_kin, energy/self.config.N, e_total, pressure])
-        logger.info(f"Time: {t:.3f}, Temperature: {temp:.2e}, KE: {e_kin:0.2e} PE: {energy/self.config.N:0.2e} Energy: {e_total:.2e} Pressure: {pressure:0.2f}")
+        logger.info(f"Time: {t:.3f}, Temperature: {temp:.2e}, KE: {e_kin:0.2e} PE: {energy/self.config.N:0.2e} Energy: {e_total:.2e} Pressure: {pressure}")
         
     def save_simulation(self):
         """
@@ -314,7 +315,7 @@ if __name__ == "__main__":
                     T=0.728,
                     d=0.8442,
                     cutoff=2.5,
-                    tmax=5,
+                    tmax=40,
                     dt=0.001)
     simulation = MDSimulation(config)
     simulation.run_simulation()

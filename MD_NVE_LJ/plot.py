@@ -97,9 +97,33 @@ def plot_temp_profile(file_path):
     plt.grid(True)
     plt.savefig(file_path / "temp_profile.png")
     plt.close()
+
+def plot_pressure_profile(file_path):
+    """
+    Plots the pressure profile from a CSV file.
+    Also calculates and displays the average pressure after discarding the first 120 seconds of data.
+    
+    Parameters:
+        file_path (pathlib.Path): Path to the directory containing the 'history.csv' file.
+    """
+    df = pd.read_csv(file_path / "history.csv")
+    plt.plot(df["time"], df["P"])
+    
+    df = df[df['time'] >= 2]
+    avg_pressure = df['P'].mean()
+    std_pressure = df['P'].std()
+    plt.text(0.2, 0.55, f"Average Pressure: {avg_pressure:.2f} $\pm$ {std_pressure:0.3f}", transform=plt.gca().transAxes, va='top', fontsize=14)
+    
+    plt.xlabel('Time [min]')
+    plt.ylabel('Pressure')
+    plt.title('Pressure vs time profile')
+    plt.grid(True)
+    plt.savefig(file_path / "pressure_profile.png")
+    plt.close()
     
 paths = Path("experiments_test").glob("*")
 for path in paths:
     plot_rdf(path)
     plot_energy_profile(path)
     plot_temp_profile(path)
+    plot_pressure_profile(path)

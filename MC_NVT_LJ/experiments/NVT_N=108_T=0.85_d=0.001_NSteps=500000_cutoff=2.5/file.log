@@ -1,0 +1,41 @@
+2024-11-11 13:25:37.591 | INFO     | __main__:__init__:71 - Box length: 47.62203155904597
+2024-11-11 13:25:37.591 | INFO     | __main__:run_simulation:161 - Running simulation...
+2024-11-11 13:26:16.872 | INFO     | __main__:__init__:71 - Box length: 47.62203155904597
+2024-11-11 13:26:16.872 | INFO     | __main__:run_simulation:164 - Running simulation...
+2024-11-11 13:26:16.934 | INFO     | __main__:run_simulation:172 - Step: 0 | energy: -1.72e-03
+2024-11-11 13:29:47.255 | INFO     | __main__:__init__:71 - Box length: 47.62203155904597
+2024-11-11 13:29:47.255 | INFO     | __main__:run_simulation:177 - Running simulation...
+2024-11-11 13:29:47.318 | INFO     | __main__:run_simulation:185 - Step: 0 | energy: -1.72e-03
+2024-11-11 13:29:50.333 | INFO     | __main__:run_simulation:185 - Step: 100 | energy: -1.72e-03
+2024-11-11 13:29:53.348 | INFO     | __main__:run_simulation:185 - Step: 200 | energy: -1.72e-03
+2024-11-11 13:29:56.382 | INFO     | __main__:run_simulation:185 - Step: 300 | energy: -1.72e-03
+2024-11-11 13:29:59.485 | INFO     | __main__:run_simulation:185 - Step: 400 | energy: -1.72e-03
+2024-11-11 13:30:02.708 | INFO     | __main__:run_simulation:185 - Step: 500 | energy: -1.72e-03
+2024-11-11 13:30:05.761 | INFO     | __main__:run_simulation:185 - Step: 600 | energy: -1.72e-03
+2024-11-11 13:30:08.817 | INFO     | __main__:run_simulation:185 - Step: 700 | energy: -1.73e-03
+2024-11-11 13:30:11.875 | INFO     | __main__:run_simulation:185 - Step: 800 | energy: -1.73e-03
+2024-11-11 13:30:14.929 | INFO     | __main__:run_simulation:185 - Step: 900 | energy: -1.73e-03
+2024-11-11 13:30:17.997 | INFO     | __main__:run_simulation:185 - Step: 1000 | energy: -1.73e-03
+2024-11-11 13:30:21.117 | INFO     | __main__:run_simulation:185 - Step: 1100 | energy: -1.72e-03
+2024-11-11 13:30:24.237 | INFO     | __main__:run_simulation:185 - Step: 1200 | energy: -1.72e-03
+2024-11-11 13:30:27.375 | INFO     | __main__:run_simulation:185 - Step: 1300 | energy: -1.73e-03
+2024-11-11 13:30:30.499 | INFO     | __main__:run_simulation:185 - Step: 1400 | energy: -1.73e-03
+2024-11-11 13:30:33.618 | INFO     | __main__:run_simulation:185 - Step: 1500 | energy: -1.73e-03
+2024-11-11 13:30:36.720 | INFO     | __main__:run_simulation:185 - Step: 1600 | energy: -1.73e-03
+2024-11-11 13:30:39.779 | INFO     | __main__:run_simulation:185 - Step: 1700 | energy: -1.73e-03
+2024-11-11 13:30:42.849 | INFO     | __main__:run_simulation:185 - Step: 1800 | energy: -1.73e-03
+2024-11-11 13:30:45.896 | INFO     | __main__:run_simulation:185 - Step: 1900 | energy: -1.73e-03
+2024-11-11 13:30:48.928 | INFO     | __main__:run_simulation:185 - Step: 2000 | energy: -1.73e-03
+2024-11-11 13:30:51.969 | INFO     | __main__:run_simulation:185 - Step: 2100 | energy: -1.73e-03
+2024-11-11 13:30:55.006 | INFO     | __main__:run_simulation:185 - Step: 2200 | energy: -1.73e-03
+2024-11-11 13:30:58.048 | INFO     | __main__:run_simulation:185 - Step: 2300 | energy: -1.73e-03
+2024-11-11 13:31:01.124 | INFO     | __main__:run_simulation:185 - Step: 2400 | energy: -1.73e-03
+2024-11-11 13:31:04.165 | INFO     | __main__:run_simulation:185 - Step: 2500 | energy: -1.73e-03
+2024-11-11 13:31:07.201 | INFO     | __main__:run_simulation:185 - Step: 2600 | energy: -1.73e-03
+2024-11-11 13:31:10.235 | INFO     | __main__:run_simulation:185 - Step: 2700 | energy: -1.73e-03
+2024-11-11 13:31:13.295 | INFO     | __main__:run_simulation:185 - Step: 2800 | energy: -1.73e-03
+2024-11-11 13:31:16.414 | INFO     | __main__:run_simulation:185 - Step: 2900 | energy: -1.73e-03
+2024-11-11 13:31:19.535 | INFO     | __main__:run_simulation:185 - Step: 3000 | energy: -1.73e-03
+2024-11-11 13:31:22.623 | INFO     | __main__:run_simulation:185 - Step: 3100 | energy: -1.73e-03
+2024-11-11 13:31:25.715 | INFO     | __main__:run_simulation:185 - Step: 3200 | energy: -1.73e-03
+2024-11-11 13:31:28.779 | INFO     | __main__:run_simulation:185 - Step: 3300 | energy: -1.73e-03

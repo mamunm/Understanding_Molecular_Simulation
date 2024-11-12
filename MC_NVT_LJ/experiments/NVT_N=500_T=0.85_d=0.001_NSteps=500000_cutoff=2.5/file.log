@@ -1,0 +1,3 @@
+2024-11-11 13:31:32.152 | INFO     | __main__:__init__:71 - Box length: 79.37005259840996
+2024-11-11 13:31:32.152 | INFO     | __main__:run_simulation:177 - Running simulation...
+2024-11-11 13:31:33.479 | INFO     | __main__:run_simulation:185 - Step: 0 | energy: -7.27e-03
