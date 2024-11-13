@@ -1,0 +1,102 @@
+Starting equilibration...
+Step 0
+Step 100000
+Step 200000
+Step 300000
+Step 400000
+Step 500000
+Step 600000
+Step 700000
+Step 800000
+Step 900000
+Step 1000000
+Step 1100000
+Step 1200000
+Step 1300000
+Step 1400000
+Step 1500000
+Step 1600000
+Step 1700000
+Step 1800000
+Step 1900000
+Starting production...
+Step 0: Energy = -0.010549 Temperature = -0.0070327 Pressure = 0.000837688 Acceptance = 1
+Step 100000: Energy = -0.00393472 Temperature = -0.00262315 Pressure = 0.000846674 Acceptance = 0.97913
+Step 200000: Energy = -0.0122681 Temperature = -0.00817875 Pressure = 0.000841123 Acceptance = 0.97925
+Step 300000: Energy = -0.0139444 Temperature = -0.00929627 Pressure = 0.000840735 Acceptance = 0.97896
+Step 400000: Energy = -0.011195 Temperature = -0.0074633 Pressure = 0.000835698 Acceptance = 0.979325
+Step 500000: Energy = -0.00766049 Temperature = -0.00510699 Pressure = 0.000842342 Acceptance = 0.979444
+Step 600000: Energy = -0.00943225 Temperature = -0.00628816 Pressure = 0.000849357 Acceptance = 0.979322
+Step 700000: Energy = -0.00667921 Temperature = -0.00445281 Pressure = 0.000840998 Acceptance = 0.979343
+Step 800000: Energy = -0.0156168 Temperature = -0.0104112 Pressure = 0.000844818 Acceptance = 0.979261
+Step 900000: Energy = -0.0159909 Temperature = -0.0106606 Pressure = 0.000844041 Acceptance = 0.979232
+Step 1000000: Energy = -0.0092847 Temperature = -0.0061898 Pressure = 0.000840728 Acceptance = 0.979212
+Step 1100000: Energy = -0.0127621 Temperature = -0.00850808 Pressure = 0.000833264 Acceptance = 0.979273
+Step 1200000: Energy = -0.00924914 Temperature = -0.00616609 Pressure = 0.000836345 Acceptance = 0.979358
+Step 1300000: Energy = -0.0105241 Temperature = -0.00701609 Pressure = 0.000834281 Acceptance = 0.979363
+Step 1400000: Energy = -0.00907585 Temperature = -0.00605057 Pressure = 0.000839564 Acceptance = 0.979377
+Step 1500000: Energy = -0.0139701 Temperature = -0.00931343 Pressure = 0.000833106 Acceptance = 0.979462
+Step 1600000: Energy = -0.00971413 Temperature = -0.00647609 Pressure = 0.000839017 Acceptance = 0.979473
+Step 1700000: Energy = -0.00800106 Temperature = -0.00533404 Pressure = 0.00084704 Acceptance = 0.979455
+Step 1800000: Energy = -0.0100438 Temperature = -0.00669587 Pressure = 0.000849186 Acceptance = 0.979514
+Step 1900000: Energy = -0.00633768 Temperature = -0.00422512 Pressure = 0.000840372 Acceptance = 0.979528
+Step 2000000: Energy = -0.00856271 Temperature = -0.00570847 Pressure = 0.000867303 Acceptance = 0.979498
+Step 2100000: Energy = -0.0124787 Temperature = -0.00831913 Pressure = 0.000847027 Acceptance = 0.979571
+Step 2200000: Energy = -0.013021 Temperature = -0.00868066 Pressure = 0.000832526 Acceptance = 0.979578
+Step 2300000: Energy = -0.0119712 Temperature = -0.00798083 Pressure = 0.000834994 Acceptance = 0.979639
+Step 2400000: Energy = -0.0144434 Temperature = -0.00962894 Pressure = 0.000861295 Acceptance = 0.979634
+Step 2500000: Energy = -0.0174622 Temperature = -0.0116415 Pressure = 0.000842336 Acceptance = 0.979626
+Step 2600000: Energy = -0.00859859 Temperature = -0.00573239 Pressure = 0.000862653 Acceptance = 0.979667
+Step 2700000: Energy = -0.0126857 Temperature = -0.00845714 Pressure = 0.000837888 Acceptance = 0.979643
+Step 2800000: Energy = -0.0128686 Temperature = -0.00857904 Pressure = 0.000831601 Acceptance = 0.979661
+Step 2900000: Energy = -0.00735486 Temperature = -0.00490324 Pressure = 0.000839258 Acceptance = 0.97968
+Step 3000000: Energy = -0.0074378 Temperature = -0.00495853 Pressure = 0.000846424 Acceptance = 0.979643
+Step 3100000: Energy = -0.00843596 Temperature = -0.00562397 Pressure = 0.000838427 Acceptance = 0.97964
+Step 3200000: Energy = -0.00649148 Temperature = -0.00432765 Pressure = 0.000841118 Acceptance = 0.979676
+Step 3300000: Energy = -0.00967916 Temperature = -0.00645277 Pressure = 0.000839382 Acceptance = 0.97967
+Step 3400000: Energy = -0.00991382 Temperature = -0.00660921 Pressure = 0.00083948 Acceptance = 0.979662
+Step 3500000: Energy = -0.0127601 Temperature = -0.0085067 Pressure = 0.000836462 Acceptance = 0.979635
+Step 3600000: Energy = -0.0132514 Temperature = -0.0088343 Pressure = 0.000849409 Acceptance = 0.979592
+Step 3700000: Energy = -0.00426646 Temperature = -0.0028443 Pressure = 0.000842065 Acceptance = 0.979569
+Step 3800000: Energy = -0.012344 Temperature = -0.00822934 Pressure = 0.00084658 Acceptance = 0.979551
+Step 3900000: Energy = -0.00870579 Temperature = -0.00580386 Pressure = 0.00084708 Acceptance = 0.97957
+Step 4000000: Energy = -0.00577849 Temperature = -0.00385232 Pressure = 0.000841947 Acceptance = 0.979561
+Step 4100000: Energy = -0.00830091 Temperature = -0.00553394 Pressure = 0.000837506 Acceptance = 0.97953
+Step 4200000: Energy = -0.00819413 Temperature = -0.00546275 Pressure = 0.000837359 Acceptance = 0.97952
+Step 4300000: Energy = -0.00620968 Temperature = -0.00413979 Pressure = 0.00086254 Acceptance = 0.979515
+Step 4400000: Energy = -0.00953491 Temperature = -0.00635661 Pressure = 0.00084858 Acceptance = 0.979511
+Step 4500000: Energy = -0.00572805 Temperature = -0.0038187 Pressure = 0.000843035 Acceptance = 0.979493
+Step 4600000: Energy = -0.0113954 Temperature = -0.00759692 Pressure = 0.000846118 Acceptance = 0.979491
+Step 4700000: Energy = -0.00969413 Temperature = -0.00646275 Pressure = 0.000838836 Acceptance = 0.979489
+Step 4800000: Energy = -0.011474 Temperature = -0.00764936 Pressure = 0.000833867 Acceptance = 0.979488
+Step 4900000: Energy = -0.0113966 Temperature = -0.00759776 Pressure = 0.00083782 Acceptance = 0.979478
+Step 5000000: Energy = -0.0043404 Temperature = -0.0028936 Pressure = 0.000842601 Acceptance = 0.979512
+Step 5100000: Energy = -0.0144864 Temperature = -0.00965758 Pressure = 0.000833576 Acceptance = 0.979489
+Step 5200000: Energy = -0.0127706 Temperature = -0.0085137 Pressure = 0.000835351 Acceptance = 0.979463
+Step 5300000: Energy = -0.00821488 Temperature = -0.00547659 Pressure = 0.000838632 Acceptance = 0.979471
+Step 5400000: Energy = -0.0099658 Temperature = -0.00664387 Pressure = 0.00084396 Acceptance = 0.979479
+Step 5500000: Energy = -0.0124529 Temperature = -0.00830193 Pressure = 0.000836367 Acceptance = 0.979477
+Step 5600000: Energy = -0.00691047 Temperature = -0.00460698 Pressure = 0.00085516 Acceptance = 0.979494
+Step 5700000: Energy = -0.00857947 Temperature = -0.00571965 Pressure = 0.000847935 Acceptance = 0.979492
+Step 5800000: Energy = -0.0131703 Temperature = -0.00878018 Pressure = 0.000840914 Acceptance = 0.979508
+Step 5900000: Energy = -0.0105275 Temperature = -0.00701834 Pressure = 0.000865951 Acceptance = 0.979504
+Step 6000000: Energy = -0.00820277 Temperature = -0.00546851 Pressure = 0.000837605 Acceptance = 0.979495
+Step 6100000: Energy = -0.0138378 Temperature = -0.00922517 Pressure = 0.0008607 Acceptance = 0.979497
+Step 6200000: Energy = -0.011214 Temperature = -0.00747598 Pressure = 0.00085801 Acceptance = 0.9795
+Step 6300000: Energy = -0.00764091 Temperature = -0.00509394 Pressure = 0.000849892 Acceptance = 0.979508
+Step 6400000: Energy = -0.0130122 Temperature = -0.00867481 Pressure = 0.000842241 Acceptance = 0.979513
+Step 6500000: Energy = -0.0123227 Temperature = -0.00821512 Pressure = 0.000834132 Acceptance = 0.979489
+Step 6600000: Energy = -0.0170474 Temperature = -0.0113649 Pressure = 0.000830685 Acceptance = 0.9795
+Step 6700000: Energy = -0.0120459 Temperature = -0.00803058 Pressure = 0.000861177 Acceptance = 0.979522
+Step 6800000: Energy = -0.0113322 Temperature = -0.00755478 Pressure = 0.000845837 Acceptance = 0.979502
+Step 6900000: Energy = -0.0143874 Temperature = -0.00959161 Pressure = 0.000838857 Acceptance = 0.979497
+Step 7000000: Energy = -0.0064804 Temperature = -0.00432027 Pressure = 0.000841353 Acceptance = 0.979488
+Step 7100000: Energy = -0.00995688 Temperature = -0.00663792 Pressure = 0.000834826 Acceptance = 0.979495
+Step 7200000: Energy = -0.0149003 Temperature = -0.00993351 Pressure = 0.000851916 Acceptance = 0.979494
+Step 7300000: Energy = -0.0164863 Temperature = -0.0109909 Pressure = 0.000852162 Acceptance = 0.979491
+Step 7400000: Energy = -0.0125225 Temperature = -0.00834835 Pressure = 0.000849683 Acceptance = 0.979499
+Step 7500000: Energy = -0.00818418 Temperature = -0.00545612 Pressure = 0.000855046 Acceptance = 0.979512
+Step 7600000: Energy = -0.00897404 Temperature = -0.00598269 Pressure = 0.000839044 Acceptance = 0.979519
+Step 7700000: Energy = -0.00730071 Temperature = -0.00486714 Pressure = 0.00084987 Acceptance = 0.979504
+Step 7800000: Energy = -0.00527545 Temperature = -0.00351697 Pressure = 0.000845118 Acceptance = 0.979508
+Step 7900000: Energy = -0.00902734 Temperature = -0.00601822 Pressure = 0.000837428 Acceptance = 0.979502

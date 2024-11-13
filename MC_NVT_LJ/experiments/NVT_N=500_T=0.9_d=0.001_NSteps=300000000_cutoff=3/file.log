@@ -5138,3 +5138,6 @@
 2024-11-11 16:27:51.260 | INFO     | __main__:run_simulation:193 - Step: 181800 | energy: -4.85e+00
 2024-11-11 16:27:52.214 | INFO     | __main__:run_simulation:193 - Step: 181850 | energy: -3.99e+00
 2024-11-11 16:27:53.168 | INFO     | __main__:run_simulation:193 - Step: 181900 | energy: -3.86e+00
+2024-11-12 14:38:26.653 | INFO     | __main__:__init__:72 - Box length: 79.37005259840996
+2024-11-12 14:38:26.664 | INFO     | __main__:run_simulation:184 - Running simulation...
+2024-11-12 14:38:28.377 | INFO     | __main__:run_simulation:196 - Step: 0 | energy: -1.64e-01 | pressure:  9.00e-04

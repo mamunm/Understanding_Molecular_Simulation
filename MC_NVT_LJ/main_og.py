@@ -61,6 +61,7 @@ class MCNVTSimulation:
         self.config = config
         self.e_cut = self.compute_e_cut()
         self.e_cor = self.compute_e_cor()
+        self.p_cor = self.compute_p_cor()
         self.nvt_id = self.get_exp_id()
         self.path = self.create_folder()
         self.boxLength = self.get_boxLength()
@@ -81,6 +82,21 @@ class MCNVTSimulation:
     def compute_p_cor(self):
         """particle correlation"""
         return (16/3)*PI*self.config.d**2*(2/3/self.config.cutoff**9 - 1/self.config.cutoff**3)
+    
+    def compute_pressure(self):
+        """Calculate and return the pressure."""
+        volume = self.config.N / self.config.d
+        vir = self.compute_vir()
+        return self.config.d * self.config.T + vir/volume
+    
+    def compute_vir(self):
+        """Calculate and return the virial."""
+        vir = 0
+        for i in range(self.config.N):
+            for j in range(i+1, self.config.N):
+                r = np.linalg.norm(self.positions[i] - self.positions[j])
+                vir += (1/r**12 - 0.5/r**6)
+        return 48 * vir / 3 + self.p_cor
     
     def create_folder(self):
         """
@@ -116,37 +132,16 @@ class MCNVTSimulation:
         """
         return 4 * ((1 / r) ** 12 - (1 / r) ** 6)
 
-    # def get_energy(self, positions):
-    #     """
-    #     Calculate the potential energy of the system.
-    #     """
-    #     N = len(positions)
-    #     potential = 0
-    #     for i in range(N):
-    #         for j in range(i + 1, N):
-    #             d = self.respect_pbc_distance(positions[i] - positions[j])
-    #             potential += self.lj_potential(np.linalg.norm(d))
-    #     return potential + self.config.N * self.e_cor
-    
     def get_energy(self, positions):
         """
         Calculate the potential energy of the system.
-        
-        Args:
-            positions (np.ndarray): Particle positions.
-            boxLength (float): Length of the simulation box.
-            e_cor (float): Correction term for the potential energy.
         """
-        hL = 0.5 * self.boxLength
-        
-        dists = self.respect_pbc_distance(positions[:, None, :] - positions[None, :, :])
-        
-        dists = np.where(dists > hL, dists - self.boxLength, np.where(dists < -hL, dists + self.boxLength, dists))
-        r = np.linalg.norm(dists, axis=-1)
-        np.fill_diagonal(r, 1)
-        potential = self.lj_potential(r)
-        potential = np.sum(potential)/2
-        
+        N = len(positions)
+        potential = 0
+        for i in range(N):
+            for j in range(i + 1, N):
+                d = self.respect_pbc_distance(positions[i] - positions[j])
+                potential += self.lj_potential(np.linalg.norm(d))
         return potential + self.config.N * self.e_cor
     
     def initialize(self):
@@ -188,13 +183,17 @@ class MCNVTSimulation:
         """
         logger.info("Running simulation...")
         energies = []
+        pressures = []
         self.initialize()
         self.energy = self.get_energy(self.positions)
+        energies.append(self.energy)
         for step in range(self.config.NSteps):
             self.metropolis_step()
             energies.append(self.energy)
+            pressure = self.compute_pressure()
+            pressures.append(pressure)
             if step % 50 == 0:
-                logger.info(f"Step: {step} | energy: {self.energy: 0.2e}")
+                logger.info(f"Step: {step} | energy: {self.energy: 0.2e} | pressure: {pressure: 0.2e}")
         self.save_simulation(energies)
         logger.info("Simulation completed.")
     
@@ -205,7 +204,7 @@ class MCNVTSimulation:
         iPart = np.random.randint(self.config.N)
         
         new_positions = self.positions.copy()
-        new_positions[iPart] = self.positions[iPart] + 20*(np.random.rand(3) - 0.5)
+        new_positions[iPart] = self.positions[iPart] + (np.random.rand(3) - 0.5)
         new_positions = new_positions % self.boxLength
         
         new_energy = self.get_energy(new_positions)
@@ -231,8 +230,8 @@ class MCNVTSimulation:
 
 if __name__ == "__main__":
     config = MCNVTConfig(N=500,
-                         T=0.9,
-                         d=1e-3,
+                         T=2,
+                         d=0.9,
                          cutoff=3,
                          NSteps=int(3E8))
     simulation = MCNVTSimulation(config)

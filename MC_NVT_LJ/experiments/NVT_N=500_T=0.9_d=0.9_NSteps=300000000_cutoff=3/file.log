@@ -167,3 +167,12 @@
 2024-11-11 15:21:22.154 | INFO     | __main__:run_simulation:194 - Step: 1900 | energy: -1.89e+03
 2024-11-11 15:21:23.070 | INFO     | __main__:run_simulation:194 - Step: 1950 | energy: -1.89e+03
 2024-11-11 15:21:23.952 | INFO     | __main__:run_simulation:194 - Step: 2000 | energy: -1.89e+03
+2024-11-12 14:39:07.193 | INFO     | __main__:__init__:72 - Box length: 8.2207069144349
+2024-11-12 14:39:07.201 | INFO     | __main__:run_simulation:184 - Running simulation...
+2024-11-12 14:39:08.928 | INFO     | __main__:run_simulation:196 - Step: 0 | energy: -2.71e+03 | pressure:  7.61e+00
+2024-11-12 14:39:58.956 | INFO     | __main__:run_simulation:196 - Step: 50 | energy: -2.71e+03 | pressure:  7.61e+00
+2024-11-12 14:40:49.141 | INFO     | __main__:run_simulation:196 - Step: 100 | energy: -2.71e+03 | pressure:  7.61e+00
+2024-11-12 14:41:38.665 | INFO     | __main__:run_simulation:196 - Step: 150 | energy: -2.71e+03 | pressure:  7.61e+00
+2024-11-12 14:42:28.641 | INFO     | __main__:run_simulation:196 - Step: 200 | energy: -2.71e+03 | pressure:  7.61e+00
+2024-11-12 14:43:18.981 | INFO     | __main__:run_simulation:196 - Step: 250 | energy: -2.71e+03 | pressure:  7.61e+00
+2024-11-12 14:44:08.415 | INFO     | __main__:run_simulation:196 - Step: 300 | energy: -2.71e+03 | pressure:  7.61e+00

@@ -6,12 +6,66 @@ from loguru import logger
 from pathlib import Path
 import itertools
 import pandas as pd # type: ignore
+import numba
 
 from typing import NamedTuple
 
 np.random.seed(0)
 
 PI = 3.14159265
+
+@numba.njit
+def lj_numba_scalar_prange(r):
+    sr6 = (1./r)**6
+    pot = 4.*(sr6*sr6 - sr6)
+    return pot
+
+@numba.njit
+def force_numba_scalar_prange(r):
+    sr6 = (1./r)**6
+    pot = (sr6*sr6 - 0.5*sr6)
+    return pot
+
+
+@numba.njit
+def distance_numba_scalar_prange(atom1, atom2, boxLength):
+    dx = atom2[0] - atom1[0]
+    dy = atom2[1] - atom1[1]
+    dz = atom2[2] - atom1[2]
+    
+    dx = np.where(dx > boxLength, dx - boxLength, np.where(dx < 0, dx + boxLength, dx))
+    dy = np.where(dy > boxLength, dy - boxLength, np.where(dy < 0, dy + boxLength, dy))
+    dz = np.where(dz > boxLength, dz - boxLength, np.where(dz < 0, dz + boxLength, dz))
+
+    r = (dx * dx + dy * dy + dz * dz) ** 0.5
+
+    return r
+
+@numba.njit(parallel=True)
+def potential_numba_scalar_prange(cluster, boxLength):
+    energy = 0.0
+    # numba.prange requires parallel=True flag to compile.
+    # It causes the loop to run in parallel in multiple threads.
+    for i in numba.prange(len(cluster)):
+        for j in range(i + 1, len(cluster)):
+            r = distance_numba_scalar_prange(cluster[i], cluster[j], boxLength)
+            e = lj_numba_scalar_prange(r)
+            energy += e
+
+    return energy
+
+@numba.njit(parallel=True)
+def virial_numba_scalar_prange(cluster, boxLength):
+    virial = 0.0
+    # numba.prange requires parallel=True flag to compile.
+    # It causes the loop to run in parallel in multiple threads.
+    for i in numba.prange(len(cluster)-1):
+        for j in range(i + 1, len(cluster)):
+            r = distance_numba_scalar_prange(cluster[i], cluster[j], boxLength)
+            vir = force_numba_scalar_prange(r)
+            virial += vir
+
+    return virial
 
 class MCNVTConfig(NamedTuple):
     """
@@ -61,6 +115,7 @@ class MCNVTSimulation:
         self.config = config
         self.e_cut = self.compute_e_cut()
         self.e_cor = self.compute_e_cor()
+        self.p_cor = self.compute_p_cor()
         self.nvt_id = self.get_exp_id()
         self.path = self.create_folder()
         self.boxLength = self.get_boxLength()
@@ -81,6 +136,17 @@ class MCNVTSimulation:
     def compute_p_cor(self):
         """particle correlation"""
         return (16/3)*PI*self.config.d**2*(2/3/self.config.cutoff**9 - 1/self.config.cutoff**3)
+    
+    def compute_pressure(self):
+        """Calculate and return the pressure."""
+        volume = self.config.N / self.config.d
+        vir = self.compute_vir()
+        return self.config.d * self.config.T + vir/volume
+    
+    def compute_vir(self):
+        """Calculate and return the virial."""
+        return 48 * virial_numba_scalar_prange(self.positions,
+            self.boxLength) / 3 + self.p_cor
     
     def create_folder(self):
         """
@@ -107,47 +173,12 @@ class MCNVTSimulation:
         string += f"cutoff={self.config.cutoff}"
         return string
     
-    def lj_potential(self, r):
-        """
-        Calculate the Lennard-Jones potential with the minimum image convention.
-        
-        Args:
-            r (float): Distance between two particles.
-        """
-        return 4 * ((1 / r) ** 12 - (1 / r) ** 6)
-
-    # def get_energy(self, positions):
-    #     """
-    #     Calculate the potential energy of the system.
-    #     """
-    #     N = len(positions)
-    #     potential = 0
-    #     for i in range(N):
-    #         for j in range(i + 1, N):
-    #             d = self.respect_pbc_distance(positions[i] - positions[j])
-    #             potential += self.lj_potential(np.linalg.norm(d))
-    #     return potential + self.config.N * self.e_cor
     
     def get_energy(self, positions):
         """
         Calculate the potential energy of the system.
-        
-        Args:
-            positions (np.ndarray): Particle positions.
-            boxLength (float): Length of the simulation box.
-            e_cor (float): Correction term for the potential energy.
         """
-        hL = 0.5 * self.boxLength
-        
-        dists = self.respect_pbc_distance(positions[:, None, :] - positions[None, :, :])
-        
-        dists = np.where(dists > hL, dists - self.boxLength, np.where(dists < -hL, dists + self.boxLength, dists))
-        r = np.linalg.norm(dists, axis=-1)
-        np.fill_diagonal(r, 1)
-        potential = self.lj_potential(r)
-        potential = np.sum(potential)/2
-        
-        return potential + self.config.N * self.e_cor
+        return potential_numba_scalar_prange(positions, self.boxLength) + self.config.N * self.e_cor
     
     def initialize(self):
         """
@@ -169,32 +200,23 @@ class MCNVTSimulation:
         positions = positions % self.boxLength
         return positions[:self.config.N]
     
-    def respect_pbc_distance(self, r_ij):
-        """
-        Respect periodic boundary conditions for distance calculations.
-        
-        Args:
-            r_ij (np.ndarray): Distance vector between particles.
-        
-        Returns:
-            np.ndarray: Modified distance vector.
-        """
-        hL = 0.5 * self.boxLength
-        return np.where(r_ij > hL, r_ij - self.boxLength, np.where(r_ij < -hL, r_ij + self.boxLength, r_ij))
-    
     def run_simulation(self):
         """
         Run the Monte-Carlo simulation.
         """
         logger.info("Running simulation...")
         energies = []
+        pressures = []
         self.initialize()
         self.energy = self.get_energy(self.positions)
+        energies.append(self.energy)
         for step in range(self.config.NSteps):
             self.metropolis_step()
             energies.append(self.energy)
+            pressure = self.compute_pressure()
+            pressures.append(pressure)
             if step % 50 == 0:
-                logger.info(f"Step: {step} | energy: {self.energy: 0.2e}")
+                logger.info(f"Step: {step} | energy: {self.energy: 0.2e} | pressure: {pressure: 0.2e}")
         self.save_simulation(energies)
         logger.info("Simulation completed.")
     
@@ -205,7 +227,7 @@ class MCNVTSimulation:
         iPart = np.random.randint(self.config.N)
         
         new_positions = self.positions.copy()
-        new_positions[iPart] = self.positions[iPart] + 20*(np.random.rand(3) - 0.5)
+        new_positions[iPart] = self.positions[iPart] + (np.random.rand(3) - 0.5)
         new_positions = new_positions % self.boxLength
         
         new_energy = self.get_energy(new_positions)
@@ -231,8 +253,8 @@ class MCNVTSimulation:
 
 if __name__ == "__main__":
     config = MCNVTConfig(N=500,
-                         T=0.9,
-                         d=1e-3,
+                         T=2,
+                         d=0.9,
                          cutoff=3,
                          NSteps=int(3E8))
     simulation = MCNVTSimulation(config)
