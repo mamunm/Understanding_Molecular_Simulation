@@ -311,6 +311,7 @@ int main()
     auto start_time = getTime();
 
     std::vector<StressData> stressData = readStressFile(filename);
+    stressData.erase(stressData.begin(), stressData.begin() + 2000000);
 
     // Print only first 5 entries to avoid flooding console
     // if (!stressData.empty())
