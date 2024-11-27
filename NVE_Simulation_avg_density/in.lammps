@@ -1,0 +1,84 @@
+# LAMMPS input script for SPC/E water simulation
+units           real
+atom_style      full
+boundary        p p p
+
+log         log.lammps
+
+# Read initial configuration
+read_data       water.data
+
+# mass of each atom type, in this case 1=O, 2=H
+mass            1 15.9994
+mass            2 1.00794
+
+# Neighbor list settings
+neighbor        2.0 bin
+neigh_modify    every 1 delay 0 check yes
+
+# SPC/E water parameters
+pair_style      lj/cut/coul/long 10.0 10.0
+pair_modify     tail yes
+kspace_style    pppm 5.0e-5
+bond_style      harmonic
+angle_style     harmonic
+
+# Long-range Coulombic settings
+kspace_modify   order 6 mesh 48 48 48
+
+# SPC/E water parameters
+pair_coeff      1 1 0.1553 3.166   # O-O
+pair_coeff      2 2 0.0000 0.0000  # H-H
+pair_coeff      1 2 0.0000 1.583   # O-H
+bond_coeff      1 1000.0 1.0000  # O-H
+angle_coeff     1 100.0 109.47   # H-O-H
+
+#Minimizing - minimize first to avoid system from blowing up
+min_style       cg
+minimize        1.0e-4 1.0e-6 100 1000
+
+# Timestep
+timestep        1.0  # 1 fs
+
+# Temperature settings
+variable        temp equal 298.15
+
+# Initial velocity distribution
+velocity        all create ${temp} 12345
+
+# Output settings
+thermo          1000
+thermo_style    custom step temp press pe ke etotal density
+
+# Dumps for analysis
+dump            1 all custom 1000 traj.lammpstrj id type x y z xu yu zu vx vy vz
+dump_modify     1 sort id
+
+# MSD computation
+compute         msd all msd com yes
+fix            msd_print all print 100 "$(step) $(c_msd[4])" file msd.dat
+
+# Viscosity computation (Green-Kubo)
+variable        pxx equal pxx
+variable        pyy equal pyy
+variable        pzz equal pzz
+variable        pxy equal pxy
+variable        pxz equal pxz
+variable        pyz equal pyz
+fix            stress all ave/time 1 1 1 v_pxx v_pyy v_pzz v_pxy v_pxz v_pyz file stress.dat
+
+# Constrain water geometry
+fix             shake all shake 0.0001 20 0 b 1 a 1
+
+# NVT Equilibration - 2 ns
+fix             1 all nvt temp ${temp} ${temp} 100.0
+run             2000000
+unfix           1
+
+write_restart   equil.restart
+
+# NVE Production - 5 ns
+fix             2 all nve
+run             5000000
+
+write_restart   final.restart

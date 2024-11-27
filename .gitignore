@@ -1,3 +1,9 @@
 *.txt
+*.dat
+*.out
+*.err
+*.restart
+traj.lammpstrj
+log.lammps
 MC_NVT_LJ
 MC_NVT_LJ_cuda
