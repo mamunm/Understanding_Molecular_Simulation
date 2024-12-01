@@ -3,6 +3,7 @@
 *.out
 *.err
 *.restart
+.idea
 traj.lammpstrj
 log.lammps
 MC_NVT_LJ
